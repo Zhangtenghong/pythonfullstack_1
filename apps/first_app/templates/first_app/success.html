@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>Document</title>
+  <style>
+    .left{
+      vertical-align: top;
+      width:40%;
+      min-height: 200px;
+      padding:15px;
+      display:inline-block;
+    }
+    .right{
+      width:40%;
+      min-height: 200px;
+      display:inline-block;
+      padding:15px
+    }
+    .messages{
+      color:red
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand">Welcome {{user.first_name}}</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/myaccount/{{user.id}}">Edit My Account</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="left">
+      <h3>Quotes</h3>
+      {% for quote in quotes %}
+      <hr>
+      <p>ID: {{quote.id}}</p>
+      <p>Quote: {{quote.quote}}</p>
+      <p>Posted by: <a href="/user/{{quote.submitted_by.id}}">{{quote.submitted_by.first_name}}</a></p>
+      <p id="like-{{quote.id}}">{{quote.liked_by.count}}</p>
+      <a href="/like/{{quote.id}}" class="like">Like</a>
+      {% if quote.submitted_by.id == user.id %}
+      <a href="/deletequote/{{quote.id}}">Delete</a>
+      {% endif %}
+      {% endfor %}
+  </div>
+  <div class="right">
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+          {% endfor %}
+    </ul>
+    {% endif %}
+    <h3>Add a Quote!</h3>
+    <form action="/addquote" method="POST">
+    {% csrf_token %}
+      <div class="col-8">
+        <label for="exampleInputEmail1">Author:</label>
+        <input type="text" class="form-control" name="author">
+      </div>
+      <div class="col-8">
+        <label for="exampleFormControlTextarea1">Quote:</label>
+        <textarea class="form-control" name="quote" rows="3"></textarea>
+      </div>
+      <br>
+      <div class="col-8">
+        <button type="submit" class="btn  btn-primary">Submit</button>
+      </div>
+    </form>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    $('.like').click(function(e){
+      e.preventDefault();
+      var route=$(this).attr('href');
+      console.log(route);
+      $.ajax({
+        url:route,
+        method:"GET",
+        success:function(res){
+          $(`#like-${res.id}`).text(res.likes_count,);
+        },
+        error:function(res){
+          console.log(res);
+        }
+      })
+    })
+  </script>
+</body>
+</html>

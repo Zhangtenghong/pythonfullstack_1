@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <title>Document</title>
+  <style>
+    .left{
+      vertical-align: top;
+      width:40%;
+      min-height: 200px;
+      padding:15px;
+      display:inline-block;
+    }
+    .right{
+      width:40%;
+      min-height: 200px;
+      display:inline-block;
+      padding:15px
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand">Edit My Account</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/quotes">Back</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="logout">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <form action="/edit/{{id}}" method="POST">
+    {% csrf_token %}
+    <div class="col-8">
+      <label for="exampleInputEmail1">First name:</label>
+      <input type="text" class="form-control" name="fname" value="{{firstname}}">
+    </div>
+    <div class="col-8">
+      <label for="exampleInputPassword1">Last name:</label>
+      <input type="text" class="form-control" name="lname" value="{{lastname}}">
+    </div>
+    <div class="col-8">
+      <label for="exampleInputPassword1">Email</label>
+      <input type="email" class="form-control" name="email" value="{{email}}">
+    </div>
+    <br>
+    <div class="col-8">
+      <button type="submit" class="btn  btn-primary">Update</button>
+    </div>
+  </form>
+</body>
+</html>
